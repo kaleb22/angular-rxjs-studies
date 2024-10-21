@@ -8,13 +8,13 @@
     alt="Book's cover"
   />
   <div class="card__info">
-    <p class="card__title">{{ book.title }}</p>
+    <p class="card__title">{{ book.title | limitDescription }}</p>
     <p class="card__label">author:</p>
-    <p class="card__result">{{ book.authors }}</p>
+    <p class="card__result">{{ book.authors | author }}</p>
     <p class="card__label">published date:</p>
-    <p class="card__result">{{ book.publishedDate }}</p>
+    <p class="card__result">{{ book.publishedDate | date: "dd/MM/yyyy" }}</p>
     <p class="card__label">publisher:</p>
-    <p class="card__result">{{ book.publisher }}</p>
+    <p class="card__result">{{ book.publisher | limitDescription }}</p>
     <button (click)="onModalChange(true)">Mais detalhes</button>
   </div>
 </div>
