@@ -1,1 +1,23 @@
-<p>book works!</p>
+<div class="card">
+  <img
+    src="{{
+      book.thumbnail != undefined
+        ? book.thumbnail
+        : 'assets/images/capa-indisponivel.png'
+    }}"
+    alt="Book's cover"
+  />
+  <div class="card__info">
+    <p class="card__title">{{ book.title }}</p>
+    <p class="card__label">author:</p>
+    <p class="card__result">{{ book.authors }}</p>
+    <p class="card__label">published date:</p>
+    <p class="card__result">{{ book.publishedDate }}</p>
+    <p class="card__label">publisher:</p>
+    <p class="card__result">{{ book.publisher }}</p>
+    <button (click)="onModalChange(true)">Mais detalhes</button>
+  </div>
+</div>
+<div *ngIf="isModalOpen">
+  <!-- <app-modal-book [book]="book" (mudouModal)="onModalChange($event)"></app-modal-book> -->
+</div>

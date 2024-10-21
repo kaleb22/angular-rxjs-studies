@@ -1,16 +1,14 @@
-<section class="container">
+<section>
   <header>What book are you looking for?</header>
   <div class="search">
-    <input
-      type="search"
-    >
-    <button>
-      <img src="assets/images/icone-busca.png" alt="Lupa de cor roxa">
+    <input type="search" [(ngModel)]="searchField" />
+    <button (click)="search()">
+      <img src="assets/images/icone-busca.png" alt="Lupa de cor roxa" />
     </button>
   </div>
   <p>You can look for subject, author, name...</p>
 
-  <div class="container-card" *ngIf="bookList.length > 0, else initialScreen">
+  <div class="container-card" *ngIf="bookList.length > 0; else initialScreen">
     <div *ngFor="let book of bookList">
       <app-book [book]="book"></app-book>
     </div>
@@ -18,12 +16,16 @@
 
   <ng-template #initialScreen>
     <div class="images">
-      <h1 class="title">Search for the book <br> you want on <br> our shelf!</h1>
+      <h1 class="images__title">
+        Search for the book <br />
+        you want on <br />
+        our shelf!
+      </h1>
       <img
-        class="picture"
+        class="images__picture"
         src="assets/images/ilustracao-estante.png"
-        alt="an Image of a person stading aside a bookshelf with books and plants">
+        alt="an Image of a person stading aside a bookshelf with books and plants"
+      />
     </div>
   </ng-template>
-
 </section>
