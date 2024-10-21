@@ -1,0 +1,33 @@
+<section *ngIf="modalStatus" class="container {{ hideScroll() }}">
+  <div class="card">
+    <img
+      class="card__imagem"
+      src="{{
+        book.thumbnail != undefined
+          ? book.thumbnail
+          : 'assets/imagens/capa-indisponivel.png'
+      }}"
+      alt="Book's cover"
+    />
+    <div class="card__info">
+      <p class="card__title">{{ book.title }}</p>
+      <p class="card__label">author:</p>
+      <p class="card__result">{{ book.authors | author }}</p>
+      <p class="card__label">published date:</p>
+      <p class="card__result">{{ book.publishedDate | date: "dd/MM/yyyy" }}</p>
+      <p class="card__label">publisher:</p>
+      <p class="card__result">{{ book.publisher | limitDescription }}</p>
+      <button (click)="goToPreview()" class="card__details">
+        read preview
+      </button>
+    </div>
+    <button (click)="closeModal()" class="card__close">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <div class="card__sinopse">
+      <h4 class="card__label">Sinopse</h4>
+      <p class="card__result">{{ book.description }}</p>
+    </div>
+  </div>
+  <div class="overlay"></div>
+</section>

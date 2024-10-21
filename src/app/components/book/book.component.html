@@ -19,5 +19,8 @@
   </div>
 </div>
 <div *ngIf="isModalOpen">
-  <!-- <app-modal-book [book]="book" (mudouModal)="onModalChange($event)"></app-modal-book> -->
+  <app-modal-book
+    [book]="book"
+    (modalChanged)="onModalChange($event)"
+  ></app-modal-book>
 </div>
