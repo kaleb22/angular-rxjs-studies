@@ -1,4 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import {
   BehaviorSubject,
@@ -6,8 +10,10 @@ import {
   Subject,
   catchError,
   map,
+  retry,
   switchMap,
 } from 'rxjs';
+
 import { ResultBooks } from '../models/result-books.interface';
 import { Item } from '../models/item.interface';
 import { Book } from '../models/book.interface';
@@ -23,7 +29,6 @@ export class BookService {
   searchTermAction$ = this.searchTermAction.asObservable();
 
   searchBook(searchTerm: string) {
-    console.log('term -> ', searchTerm);
     this.searchTermAction.next(searchTerm);
   }
 
@@ -41,6 +46,7 @@ export class BookService {
       };
     }),
     map((res) => this.mapBookResultsToBookList(res.items)),
+    retry(3),
     catchError((err) => this.handleError(err)),
   );
 
@@ -63,7 +69,7 @@ export class BookService {
     return { params };
   }
 
-  private handleError(error: Error): Observable<Book[]> {
+  private handleError(error: HttpErrorResponse): Observable<Book[]> {
     console.error('error on request -> ', error);
 
     const bookError: Book = {
