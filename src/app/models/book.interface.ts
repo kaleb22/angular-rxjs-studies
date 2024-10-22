@@ -8,4 +8,5 @@ export interface Book {
   description?: string;
   previewLink?: string;
   thumbnail?: string;
+  error?: boolean;
 }

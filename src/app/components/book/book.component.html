@@ -1,23 +1,30 @@
-<div class="card">
-  <img
-    src="{{
-      book.thumbnail != undefined
-        ? book.thumbnail
-        : 'assets/images/capa-indisponivel.png'
-    }}"
-    alt="Book's cover"
-  />
-  <div class="card__info">
-    <p class="card__title">{{ book.title | limitDescription }}</p>
-    <p class="card__label">author:</p>
-    <p class="card__result">{{ book.authors | author }}</p>
-    <p class="card__label">published date:</p>
-    <p class="card__result">{{ book.publishedDate | date: "dd/MM/yyyy" }}</p>
-    <p class="card__label">publisher:</p>
-    <p class="card__result">{{ book.publisher | limitDescription }}</p>
-    <button (click)="onModalChange(true)">Mais detalhes</button>
-  </div>
+<div class="error" *ngIf="book.error; else showBook">
+  <h1>Sorry, we had a problem with your search. Try again soon.</h1>
 </div>
+
+<ng-template #showBook>
+  <div class="card">
+    <img
+      src="{{
+        book.thumbnail != undefined
+          ? book.thumbnail
+          : 'assets/images/capa-indisponivel.png'
+      }}"
+      alt="Book's cover"
+    />
+    <div class="card__info">
+      <p class="card__title">{{ book.title | limitDescription }}</p>
+      <p class="card__label">author:</p>
+      <p class="card__result">{{ book.authors | author }}</p>
+      <p class="card__label">published date:</p>
+      <p class="card__result">{{ book.publishedDate | date: "dd/MM/yyyy" }}</p>
+      <p class="card__label">publisher:</p>
+      <p class="card__result">{{ book.publisher | limitDescription }}</p>
+      <button (click)="onModalChange(true)">Mais detalhes</button>
+    </div>
+  </div>
+</ng-template>
+
 <div *ngIf="isModalOpen">
   <app-modal-book
     [book]="book"

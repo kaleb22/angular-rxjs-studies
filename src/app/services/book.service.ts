@@ -1,7 +1,16 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  catchError,
+  map,
+  switchMap,
+} from 'rxjs';
 import { ResultBooks } from '../models/result-books.interface';
+import { Item } from '../models/item.interface';
+import { Book } from '../models/book.interface';
 
 @Injectable({ providedIn: 'root' })
 export class BookService {
@@ -10,17 +19,56 @@ export class BookService {
 
   private httpClient = inject(HttpClient);
 
-  getBooks(searchTerm: string): Observable<ResultBooks> {
-    const params = new HttpParams().append('q', searchTerm);
-    return this.httpClient
-      .get<ResultBooks>(this.API_PATH_VOLUMES, { params })
-      .pipe(
-        map((res) => {
-          return {
-            items: res.items,
-            totalItems: res.totalItems,
-          };
-        }),
-      );
+  private searchTermAction = new Subject<string>();
+  searchTermAction$ = this.searchTermAction.asObservable();
+
+  searchBook(searchTerm: string) {
+    console.log('term -> ', searchTerm);
+    this.searchTermAction.next(searchTerm);
+  }
+
+  resultsBooks$ = this.searchTermAction$.pipe(
+    switchMap((term) =>
+      this.httpClient.get<ResultBooks>(
+        this.API_PATH_VOLUMES,
+        this.getParams(term),
+      ),
+    ),
+    map((res) => {
+      return {
+        items: res.items ? res.items : [],
+        totalItems: res.totalItems,
+      };
+    }),
+    map((res) => this.mapBookResultsToBookList(res.items)),
+    catchError((err) => this.handleError(err)),
+  );
+
+  private mapBookResultsToBookList(items: Item[]) {
+    return items.map((item) => {
+      return {
+        title: item.volumeInfo?.title,
+        authors: item.volumeInfo?.authors,
+        publisher: item.volumeInfo?.publisher,
+        publishedDate: item.volumeInfo?.publishedDate,
+        description: item.volumeInfo?.description,
+        thumbnail: item.volumeInfo?.imageLinks?.thumbnail,
+        previewLink: item.volumeInfo?.previewLink,
+      } as Book;
+    });
+  }
+
+  private getParams(term: string) {
+    const params = new HttpParams().append('q', term);
+    return { params };
+  }
+
+  private handleError(error: Error): Observable<Book[]> {
+    console.error('error on request -> ', error);
+
+    const bookError: Book = {
+      error: true,
+    };
+    return new BehaviorSubject<Book[]>([bookError]).asObservable();
   }
 }

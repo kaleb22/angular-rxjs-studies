@@ -17,6 +17,6 @@ export class BookComponent {
   isModalOpen = false;
 
   onModalChange(flag: boolean) {
-    this.isModalOpen = true;
+    this.isModalOpen = flag;
   }
 }
