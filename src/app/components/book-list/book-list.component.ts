@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { BookComponent } from '../book/book.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
@@ -9,11 +9,9 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  take,
-  tap,
+  Subject,
+  takeUntil,
 } from 'rxjs';
-import { Item } from '../../models/item.interface';
-import { Book } from '../../models/book.interface';
 
 @Component({
   selector: 'app-book-list',
@@ -22,12 +20,14 @@ import { Book } from '../../models/book.interface';
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.scss',
 })
-export class BookListComponent implements OnInit {
+export class BookListComponent implements OnInit, OnDestroy {
   searchField = new FormControl();
 
   private bookService = inject(BookService);
 
   resultsBooks$ = this.bookService.resultsBooks$;
+
+  private readonly unsub$ = new Subject<void>();
 
   ngOnInit() {
     this.searchField.valueChanges
@@ -36,7 +36,13 @@ export class BookListComponent implements OnInit {
         map((term) => term.trim()),
         debounceTime(300),
         distinctUntilChanged(),
+        takeUntil(this.unsub$),
       )
       .subscribe((term) => this.bookService.searchBook(term));
+  }
+
+  ngOnDestroy(): void {
+    this.unsub$.next();
+    this.unsub$.complete();
   }
 }
