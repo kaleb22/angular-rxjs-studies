@@ -1,5 +1,3 @@
-import { ImageLinks } from './image-links.interface';
-
 export interface Book {
   title?: string;
   authors?: string[];
