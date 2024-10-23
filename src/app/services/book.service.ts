@@ -12,11 +12,13 @@ import {
   map,
   retry,
   switchMap,
+  tap,
 } from 'rxjs';
 
 import { ResultBooks } from '../models/result-books.interface';
 import { Item } from '../models/item.interface';
 import { Book } from '../models/book.interface';
+import { SpinnerService } from './spinner.service';
 
 @Injectable({ providedIn: 'root' })
 export class BookService {
@@ -24,11 +26,13 @@ export class BookService {
     'https://www.googleapis.com/books/v1/volumes';
 
   private httpClient = inject(HttpClient);
+  private spinnerService = inject(SpinnerService);
 
   private searchTermAction = new Subject<string>();
   searchTermAction$ = this.searchTermAction.asObservable();
 
   searchBook(searchTerm: string) {
+    this.spinnerService.show(true);
     this.searchTermAction.next(searchTerm);
   }
 
@@ -46,6 +50,7 @@ export class BookService {
       };
     }),
     map((res) => this.mapBookResultsToBookList(res.items)),
+    tap(() => this.spinnerService.show(false)),
     retry(3),
     catchError((err) => this.handleError(err)),
   );

@@ -1,9 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { BookComponent } from '../book/book.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-
-import { BookService } from '../../services/book.service';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -13,28 +10,33 @@ import {
   takeUntil,
 } from 'rxjs';
 
+import { BookComponent } from '../book/book.component';
+import { BookService } from '../../services/book.service';
+import { SpinnerComponent } from './../spinner/spinner.component';
+import { SpinnerService } from '../../services/spinner.service';
+
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  imports: [CommonModule, BookComponent, ReactiveFormsModule],
+  imports: [CommonModule, BookComponent, ReactiveFormsModule, SpinnerComponent],
   templateUrl: './book-list.component.html',
   styleUrl: './book-list.component.scss',
 })
 export class BookListComponent implements OnInit, OnDestroy {
-  searchField = new FormControl();
-
   private bookService = inject(BookService);
-
-  resultsBooks$ = this.bookService.resultsBooks$;
+  private spinnerService = inject(SpinnerService);
 
   private readonly unsub$ = new Subject<void>();
+  resultsBooks$ = this.bookService.resultsBooks$;
+  spinnerAction$ = this.spinnerService.spinnerAction$;
+  searchField = new FormControl();
 
   ngOnInit() {
     this.searchField.valueChanges
       .pipe(
         filter((term) => term.length >= 3),
         map((term) => term.trim()),
-        debounceTime(300),
+        debounceTime(600),
         distinctUntilChanged(),
         takeUntil(this.unsub$),
       )
