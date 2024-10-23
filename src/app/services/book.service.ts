@@ -6,6 +6,7 @@ import {
 import { Injectable, inject } from '@angular/core';
 import {
   BehaviorSubject,
+  EMPTY,
   Observable,
   Subject,
   catchError,
@@ -30,6 +31,7 @@ export class BookService {
 
   private searchTermAction = new Subject<string>();
   searchTermAction$ = this.searchTermAction.asObservable();
+  error$ = new Subject<boolean>();
 
   searchBook(searchTerm: string) {
     this.spinnerService.show(true);
@@ -51,7 +53,7 @@ export class BookService {
     }),
     map((res) => this.mapBookResultsToBookList(res.items)),
     tap(() => this.spinnerService.show(false)),
-    retry(3),
+    //retry(3),
     catchError((err) => this.handleError(err)),
   );
 
@@ -75,11 +77,10 @@ export class BookService {
   }
 
   private handleError(error: HttpErrorResponse): Observable<Book[]> {
+    this.spinnerService.show(false);
     console.error('error on request -> ', error);
 
-    const bookError: Book = {
-      error: true,
-    };
-    return new BehaviorSubject<Book[]>([bookError]).asObservable();
+    this.error$.next(true);
+    return EMPTY;
   }
 }

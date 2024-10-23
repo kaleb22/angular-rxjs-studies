@@ -29,6 +29,7 @@ export class BookListComponent implements OnInit, OnDestroy {
   private readonly unsub$ = new Subject<void>();
   resultsBooks$ = this.bookService.resultsBooks$;
   spinnerAction$ = this.spinnerService.spinnerAction$;
+  error$ = this.bookService.error$;
   searchField = new FormControl();
 
   ngOnInit() {

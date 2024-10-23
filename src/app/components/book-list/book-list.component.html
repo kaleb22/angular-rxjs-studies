@@ -10,10 +10,10 @@
 
   <div
     class="container-card"
-    *ngIf="resultsBooks$ | async as bookList; else initialScreen"
+    *ngIf="resultsBooks$ | async as bookList; else onError"
   >
     <div *ngIf="bookList.length == 0; else showBooks">
-      <div class="container-card__error">
+      <div class="error">
         <h1>
           We didn't find any results with your search. Try again with another
           term.
@@ -26,18 +26,26 @@
     </ng-template>
   </div>
 
-  <ng-template #initialScreen>
-    <div class="images">
-      <h1 class="images__title">
-        Search for the book <br />
-        you want on <br />
-        our shelf!
+  <ng-template #onError>
+    <div class="error" *ngIf="error$ | async; else initialScreen">
+      <h1>
+        Sorry, we had a problem with your search. Reload the page and try again.
       </h1>
-      <img
-        class="images__picture"
-        src="assets/images/ilustracao-estante.png"
-        alt="an Image of a person stading aside a bookshelf with books and plants"
-      />
     </div>
+
+    <ng-template #initialScreen>
+      <div class="images">
+        <h1 class="images__title">
+          Search for the book <br />
+          you want on <br />
+          our shelf!
+        </h1>
+        <img
+          class="images__picture"
+          src="assets/images/ilustracao-estante.png"
+          alt="an Image of a person stading aside a bookshelf with books and plants"
+        />
+      </div>
+    </ng-template>
   </ng-template>
 </section>

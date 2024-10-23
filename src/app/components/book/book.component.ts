@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { Book } from '../../models/book.interface';
 import { AuthorPipe } from '../../pipes/author.pipe';
 import { LimitDescriptionPipe } from '../../pipes/limit-description.pipe';
