@@ -5,13 +5,11 @@ import {
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import {
-  BehaviorSubject,
   EMPTY,
   Observable,
   Subject,
   catchError,
   map,
-  retry,
   switchMap,
   tap,
 } from 'rxjs';
@@ -53,7 +51,6 @@ export class BookService {
     }),
     map((res) => this.mapBookResultsToBookList(res.items)),
     tap(() => this.spinnerService.show(false)),
-    //retry(3),
     catchError((err) => this.handleError(err)),
   );
 
