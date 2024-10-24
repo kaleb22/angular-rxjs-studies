@@ -5,6 +5,7 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -22,13 +23,17 @@ const body = document.querySelector('body') as HTMLBodyElement;
   templateUrl: './modal-book.component.html',
   styleUrl: './modal-book.component.scss',
 })
-export class ModalBookComponent {
+export class ModalBookComponent implements OnInit {
   @Input() book: Book;
   @Output() modalChanged = new EventEmitter();
 
   @ViewChild('modalBookInfo') modal: ElementRef;
 
   modalStatus: boolean = true;
+
+  ngOnInit() {
+    this.hideScroll();
+  }
 
   closeModal() {
     this.modalStatus = false;
@@ -37,9 +42,7 @@ export class ModalBookComponent {
   }
 
   hideScroll() {
-    if (this.modalStatus == true) {
-      body.style.overflow = 'hidden';
-    }
+    body.style.overflow = 'hidden';
   }
 
   goToPreview() {
