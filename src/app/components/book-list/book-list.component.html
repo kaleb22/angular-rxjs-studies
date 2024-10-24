@@ -13,7 +13,7 @@
     *ngIf="resultsBooks$ | async as bookList; else onError"
   >
     <div *ngIf="bookList.length == 0; else showBooks">
-      <div class="error">
+      <div class="error" data-testId="no-results">
         <h1>
           We didn't find any results with your search. Try again with another
           term.
@@ -22,19 +22,27 @@
     </div>
 
     <ng-template #showBooks>
-      <app-book *ngFor="let book of bookList" [book]="book"></app-book>
+      <app-book
+        data-testId="app-book"
+        *ngFor="let book of bookList"
+        [book]="book"
+      ></app-book>
     </ng-template>
   </div>
 
   <ng-template #onError>
-    <div class="error" *ngIf="error$ | async; else initialScreen">
+    <div
+      data-testId="on-error"
+      class="error"
+      *ngIf="error$ | async; else initialScreen"
+    >
       <h1>
         Sorry, we had a problem with your search. Reload the page and try again.
       </h1>
     </div>
 
     <ng-template #initialScreen>
-      <div class="images">
+      <div data-testId="on-load" class="images">
         <h1 class="images__title">
           Search for the book <br />
           you want on <br />

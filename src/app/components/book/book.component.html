@@ -15,12 +15,15 @@
     <p class="card__result">{{ book.publishedDate | date: "dd/MM/yyyy" }}</p>
     <p class="card__label">publisher:</p>
     <p class="card__result">{{ book.publisher | limitDescription }}</p>
-    <button (click)="onModalChange(true)">More details</button>
+    <button data-testId="details-btn" (click)="onModalChange(true)">
+      More details
+    </button>
   </div>
 </div>
 
 <div *ngIf="isModalOpen">
   <app-modal-book
+    data-testId="app-modal-book"
     [book]="book"
     (modalChanged)="onModalChange($event)"
   ></app-modal-book>
