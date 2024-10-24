@@ -1,7 +1,7 @@
-<section *ngIf="modalStatus" class="container {{ hideScroll() }}">
-  <div class="card">
+<section *ngIf="modalStatus" class="{{ hideScroll() }}">
+  <div class="card" #modalBookInfo>
     <img
-      class="card__imagem"
+      class="card__image"
       src="{{
         book.thumbnail != undefined
           ? book.thumbnail

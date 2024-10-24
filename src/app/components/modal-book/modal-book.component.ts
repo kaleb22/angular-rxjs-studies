@@ -1,5 +1,13 @@
 import { DatePipe, NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
 import { Book } from '../../models/book.interface';
 import { LimitDescriptionPipe } from '../../pipes/limit-description.pipe';
@@ -18,6 +26,8 @@ export class ModalBookComponent {
   @Input() book: Book;
   @Output() modalChanged = new EventEmitter();
 
+  @ViewChild('modalBookInfo') modal: ElementRef;
+
   modalStatus: boolean = true;
 
   closeModal() {
@@ -34,5 +44,34 @@ export class ModalBookComponent {
 
   goToPreview() {
     window.open(this.book.previewLink, '_blank');
+  }
+
+  @HostListener('keydown', ['$event'])
+  listenForKeyDown(event: KeyboardEvent) {
+    this.trapFocus(event);
+  }
+
+  private trapFocus(event: KeyboardEvent) {
+    const isTabPressed = event.key === 'Tab';
+
+    if (!isTabPressed) {
+      return;
+    }
+
+    const focusableElements = 'button';
+    const firstFocusableElement =
+      this.modal.nativeElement.querySelectorAll(focusableElements)[0];
+    const lastFocusableElement =
+      this.modal.nativeElement.querySelectorAll(focusableElements)[1];
+
+    if (event.shiftKey || isTabPressed) {
+      if (document.activeElement === firstFocusableElement) {
+        lastFocusableElement.focus();
+        event.preventDefault();
+      } else {
+        firstFocusableElement.focus();
+        event.preventDefault();
+      }
+    }
   }
 }

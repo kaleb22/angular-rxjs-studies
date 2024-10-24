@@ -1,6 +1,6 @@
 .card {
   display: grid;
-  grid-template-areas: "imagem info-card botao-fechar" "sinopse sinopse sinopse";
+  grid-template-areas: "image card-info close-btn" "sinopse sinopse sinopse";
   grid-row-gap: 1rem;
   min-height: 30rem;
   max-height: 90%;
@@ -15,16 +15,16 @@
   padding: 24px;
   z-index: 11;
 
-  &__imagem {
+  &__image {
     height: 18rem;
-    grid-area: imagem;
+    grid-area: image;
     padding-top: 1rem;
   }
 
   &__info {
     background: #ffffff;
     padding-left: 1.5rem;
-    grid-area: info-card;
+    grid-area: card-info;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -100,7 +100,7 @@
     opacity: 0.5;
     cursor: pointer;
     background: none;
-    grid-area: botao-fechar;
+    grid-area: close-btn;
     margin-top: 0.5rem;
   }
 }
