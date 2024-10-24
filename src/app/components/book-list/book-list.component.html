@@ -1,29 +1,59 @@
-<section class="container">
-  <header>What book are you looking for?</header>
+<section>
+  <header>Which book are you looking for?</header>
   <div class="search">
-    <input
-      type="search"
+    <input type="search" [formControl]="searchField" />
+    <span>
+      <img src="assets/images/icone-busca.png" alt="Lupa de cor roxa" />
+    </span>
+  </div>
+  <p>You can search for subject, author, name...</p>
+
+  <div
+    class="container-card"
+    *ngIf="resultsBooks$ | async as bookList; else onError"
+  >
+    <div *ngIf="bookList.length == 0; else showBooks">
+      <div class="error" data-testId="no-results">
+        <h1>
+          We didn't find any results with your search. Try again with another
+          term.
+        </h1>
+      </div>
+    </div>
+
+    <ng-template #showBooks>
+      <app-book
+        data-testId="app-book"
+        *ngFor="let book of bookList"
+        [book]="book"
+      ></app-book>
+    </ng-template>
+  </div>
+
+  <ng-template #onError>
+    <div
+      data-testId="on-error"
+      class="error"
+      *ngIf="error$ | async; else initialScreen"
     >
-    <button>
-      <img src="assets/images/icone-busca.png" alt="Lupa de cor roxa">
-    </button>
-  </div>
-  <p>You can look for subject, author, name...</p>
-
-  <div class="container-card" *ngIf="bookList.length > 0, else initialScreen">
-    <div *ngFor="let book of bookList">
-      <app-book [book]="book"></app-book>
+      <h1>
+        Sorry, we had a problem with your search. Reload the page and try again.
+      </h1>
     </div>
-  </div>
 
-  <ng-template #initialScreen>
-    <div class="images">
-      <h1 class="title">Search for the book <br> you want on <br> our shelf!</h1>
-      <img
-        class="picture"
-        src="assets/images/ilustracao-estante.png"
-        alt="an Image of a person stading aside a bookshelf with books and plants">
-    </div>
+    <ng-template #initialScreen>
+      <div data-testId="on-load" class="images">
+        <h1 class="images__title">
+          Search for the book <br />
+          you want on <br />
+          our shelf!
+        </h1>
+        <img
+          class="images__picture"
+          src="assets/images/ilustracao-estante.png"
+          alt="an Image of a person stading aside a bookshelf with books and plants"
+        />
+      </div>
+    </ng-template>
   </ng-template>
-
 </section>

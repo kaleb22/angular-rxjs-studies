@@ -1,5 +1,9 @@
 <app-header></app-header>
-<main>
+
+<app-spinner *ngIf="spinnerAction$ | async"></app-spinner>
+
+<main [ngClass]="{ opacity: spinnerAction$ | async }">
   <router-outlet></router-outlet>
 </main>
+
 <app-footer></app-footer>
